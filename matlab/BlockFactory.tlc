@@ -15,20 +15,29 @@
 
     std::string error = blockfactory::core::Log::getSingleton().getErrors();
     error = "%<prefix>" + error;
+    
+    %assign errTxt = FEVAL("strcat","%<prefix>", "")
+    %assign errcheck = FEVAL("strcmp","%<prefix>", errTxt)
+    %if !errcheck
+        %<LibReportFatalError(errTxt)>
+    %endif
+    
+    //LibBlockReportError([], error);
 
     // Trim the message if needed
     if (error.length() >= 1024) {
-        error = error.substr(0, 1024-1);
+       error = error.substr(0, 1024-1);
     }
 
     // This shouldn't happen
-    if (getRTM()->errorStatus) {
-        delete getRTM()->errorStatus;
-        getRTM()->errorStatus = nullptr;
-    }
+    //if (getRTM()->errorStatus) {
+    //    delete getRTM()->errorStatus;
+    //    getRTM()->errorStatus = nullptr;
+    //}
 
-    getRTM()->errorStatus = new char[1024];
-    sprintf(const_cast<char_T*>(getRTM()->errorStatus), "%s", error.c_str());
+    //getRTM()->errorStatus = new char[1024];
+    //sprintf(const_cast<char_T*>(getRTM()->errorStatus), "%s", error.c_str());
+    printf("%s\n",error.c_str());
     return;
     %return
 %endfunction %% NotifyErrors
